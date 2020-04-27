@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 #include "server.h"
+#include "routes.h"
 
 #ifndef _WIN32
 #include <unistd.h>
@@ -36,6 +37,7 @@ int main(int argc, char* argv[]) {
 	oss << args["port"].as<int>();
 
 	ntq::HttpServer server(args["threads"].as<int>());
+	ntq::InitRoutes(&server);
 	server.Start(args["host"].as<std::string>(), oss.str());
 }
 

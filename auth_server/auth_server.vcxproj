@@ -159,16 +159,27 @@
   <ItemGroup>
     <ClCompile Include="auth_server.cpp" />
     <ClCompile Include="connection.cpp" />
+    <ClCompile Include="hello.cpp" />
     <ClCompile Include="io_context_pool.cpp" />
     <ClCompile Include="request_handler.cpp" />
+    <ClCompile Include="request_wrapper.cpp" />
+    <ClCompile Include="routes.cpp" />
+    <ClCompile Include="route_table.cpp" />
+    <ClCompile Include="route_handler.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="boost.h" />
     <ClInclude Include="connection.h" />
+    <ClInclude Include="hello.h" />
     <ClInclude Include="io_context_pool.h" />
+    <ClInclude Include="request.h" />
     <ClInclude Include="request_handler.h" />
+    <ClInclude Include="request_wrapper.h" />
+    <ClInclude Include="routes.h" />
+    <ClInclude Include="route_table.h" />
+    <ClInclude Include="route_handler.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="util.h" />
   </ItemGroup>

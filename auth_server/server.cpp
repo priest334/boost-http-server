@@ -43,6 +43,9 @@ namespace ntq {
 		io_context_pool_.Start();
 	}
 
+	RequestHandler& HttpServer::request_handler() {
+		return request_handler_;
+	}
 
 	void HttpServer::StartAccept() {
 		acceptor_.async_accept(io_context_pool_.get(), [this](const boost::system::error_code& ec, tcp::socket socket) {

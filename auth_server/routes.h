@@ -1,9 +1,11 @@
 #pragma once
 
 namespace ntq {
-	class Routes {
-	public:
-	};
+
+	class HttpServer;
+
+	void InitRoutes(HttpServer* server);
+
 } // namespace ntq
 
 

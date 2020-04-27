@@ -9,20 +9,15 @@ namespace ntq {
 	class Connection :
 		public boost::enable_shared_from_this<Connection>,
 		private boost::noncopyable {
-		class ResponseSender {
-		public:
-			ResponseSender(Connection& self);
-			void operator()(http::response<http::string_body>&& resp);
-		private:
-			Connection& self_;
-		};
 	public:
 		Connection(tcp::socket&& socket, RequestHandler& request_handler);
 		~Connection();
 
 		tcp::socket& socket();
+		http::request<http::string_body>& request();
 
 		void Start();
+		void SendResponse(http::response<http::string_body>&& resp);
 
 	private:
 		void DoRead();
@@ -33,9 +28,8 @@ namespace ntq {
 		beast::tcp_stream stream_;
 		beast::flat_buffer buffer_;
 		http::request<http::string_body> request_;
-		std::shared_ptr<void> response_;
+		boost::shared_ptr<void> response_;
 		RequestHandler& request_handler_;
-		ResponseSender response_sender_;
 	};
 
 

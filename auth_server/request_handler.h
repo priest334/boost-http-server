@@ -1,26 +1,20 @@
 #pragma once
 
+
 #include "boost.h"
+#include "request_wrapper.h"
+#include "route_table.h"
 
 namespace ntq {
-	
+
 	class RequestHandler : 
 		private boost::noncopyable {
-	public:
-		template <class ResponseSender>
-		void HandleRequest(const http::request<http::string_body>& request, ResponseSender&& dosend) {
-			http::response<http::string_body> response{ http::status::ok, request.version() };
-			response.set(http::field::server, "server/0.1");
-			response.content_length(0);
-			response.keep_alive(request.keep_alive());
-			//response.keep_alive(false);
-			response.body() = "";
-
-			dosend(std::move(response));
-		}
+	public:	
+		void AddRouteHandler(RouteHandlerPtr route_handler);
+		void Process(boost::shared_ptr<RequestWrapper> request);
 
 	private:
-
+		RouteTable route_table_;
 	};
 }
 

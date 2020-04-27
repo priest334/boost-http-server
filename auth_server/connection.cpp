@@ -2,24 +2,13 @@
 
 #include <chrono>
 #include <iostream>
-
 #include "util.h"
 
 namespace ntq {
 
-	Connection::ResponseSender::ResponseSender(Connection& self) : self_(self) {
-	}
-
-	void Connection::ResponseSender::operator()(http::response<http::string_body>&& resp) {
-		auto aresp = std::make_shared<http::response<http::string_body> >(std::move(resp));
-		self_.response_ = aresp;
-		http::async_write(self_.stream_, *aresp, beast::bind_front_handler(&Connection::OnWrite, self_.shared_from_this(), aresp->need_eof()));
-	}
-
 	Connection::Connection(tcp::socket&& socket, RequestHandler& request_handler)
 		: stream_(std::move(socket)),
-		request_handler_(request_handler),
-		response_sender_(*this) {
+		request_handler_(request_handler) {
 	}
 
 
@@ -30,9 +19,19 @@ namespace ntq {
 		return stream_.socket();
 	}
 
+	http::request<http::string_body>& Connection::request() {
+		return request_;
+	}
+
 	void Connection::Start() {
 		auto self = shared_from_this();
 		net::dispatch(stream_.get_executor(), beast::bind_front_handler(&Connection::DoRead, shared_from_this()));
+	}
+
+	void Connection::SendResponse(http::response<http::string_body>&& resp) {
+		auto aresp = boost::make_shared<http::response<http::string_body> >(std::move(resp));
+		response_ = aresp;
+		http::async_write(stream_, *aresp, beast::bind_front_handler(&Connection::OnWrite, shared_from_this(), aresp->need_eof()));
 	}
 
 	void Connection::DoRead() {
@@ -43,15 +42,14 @@ namespace ntq {
 
 	void Connection::OnRead(const beast::error_code& ec, std::size_t bytes_transferred) {
 		boost::ignore_unused(bytes_transferred);
-		// This means they closed the connection
 		if (ec == http::error::end_of_stream)
 			return DoClose();
 
 		if (ec)
 			return PrintError(ec, "read");
 
-		// Send the response
-		request_handler_.HandleRequest(request_, response_sender_);
+		auto request = boost::make_shared<RequestWrapper>(shared_from_this());
+		request_handler_.Process(request);
 	}
 
 	void Connection::OnWrite(bool close, const beast::error_code& ec, std::size_t bytes_transferred) {

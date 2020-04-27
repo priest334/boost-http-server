@@ -15,6 +15,7 @@ namespace ntq {
 		~HttpServer();
 
 		void Start(const std::string& address, const std::string& port);
+		RequestHandler& request_handler();
 
 	private:
 		void StartAccept();
