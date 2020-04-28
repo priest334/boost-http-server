@@ -12,7 +12,7 @@ APPNAME	= $(shell pwd|awk -F'/' '{print $$NF}')
 CONDFLAGS = 
 
 INCLUDES:= -I.
-LINKLIBS:= -lpthread -lboost_thread
+LINKLIBS:= -lpthread -lboost_thread -lboost_program_options
 
 COMPILEFLAGS:=$(CXXFLAGS) $(CONDFLAGS)
 LINKFLAGS:=
