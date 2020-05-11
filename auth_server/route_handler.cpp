@@ -1,4 +1,5 @@
 #include "route_handler.h"
+#include "request_wrapper.h"
 
 namespace ntq {
 
@@ -19,6 +20,24 @@ namespace ntq {
 			return false;
 		else
 			return l.method_ < r.method_;
+	}
+
+	int RouteKey::method() const {
+		return method_;
+	}
+
+	std::string const RouteKey::path() const {
+		return path_;
+	}
+
+	bool RouteHandler::IsEnableProcessHead() {
+		return true;
+	}
+
+	int RouteHandler::ProcessHead(RequestWrapper* request) {
+		request->set_status_code(200);
+		request->send_content("");
+		return 0;
 	}
 
 

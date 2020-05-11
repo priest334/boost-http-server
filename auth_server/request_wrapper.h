@@ -27,6 +27,8 @@ namespace ntq {
 	private:
 		boost::shared_ptr<Connection> connection_;
 		http::response<http::string_body> response_;
+		std::string path_;
+		std::string query_string_;
 	};
 
 

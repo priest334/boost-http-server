@@ -22,6 +22,8 @@ namespace ntq {
 		explicit RouteKey(const std::string& path, int method = HttpMethodGet);
 		virtual ~RouteKey();
 		friend bool operator<(const ntq::RouteKey& l, const ntq::RouteKey& r);
+		int method() const;
+		std::string const path() const;
 	private:
 		int method_;
 		std::string path_;
@@ -34,6 +36,8 @@ namespace ntq {
 	public:
 		virtual RouteKey route_key() = 0;
 		virtual int Process(RequestWrapper* request) = 0;
+		virtual bool IsEnableProcessHead();
+		virtual int ProcessHead(RequestWrapper* request);
 	};
 
 	typedef boost::shared_ptr<RouteHandler> RouteHandlerPtr;
